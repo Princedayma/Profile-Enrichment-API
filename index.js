@@ -35,20 +35,16 @@ app.post('/users/enrich', async (req, res) => {
   }
 
   try {
-    // --- 2. Fetch HTML from the profileUrl using axios ---
     const response = await axios.get(profileUrl, {
-      timeout: 15000, // Set timeout to 15 seconds (adjust as needed),
+      timeout: 15000, 
       headers: {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-      }, // Some websites may block requests without a valid User-Agent
     });
     const html = response.data;
 
-    // --- 3. Parse HTML with Cheerio and extract the <h1> content ---
     const $ = cheerio.load(html);
     const fullName = $('h1').first().text().trim();
 
-    // Handle case where h1 tag is not found
     if (!fullName) {
       return res.status(404).json({ 
         error: `Could not find an <h1> tag on the page at ${profileUrl}` 
@@ -63,21 +59,17 @@ app.post('/users/enrich', async (req, res) => {
       sourceProfile: profileUrl,
     };
 
-    // --- Per the spec, return 201 Created for a successful resource creation ---
     res.status(201).json(enrichedProfile);
 
   } catch (error) {
     console.error(`Error during profile enrichment: ${error.message}`);
 
-    // Gracefully handle different types of errors
     if (error.response) {
-      // The request was made and the server responded with a non-2xx status code
       return res.status(502).json({
         error: `Failed to fetch the profile URL. The target server responded with status: ${error.response.status}`,
         sourceUrl: profileUrl,
       });
     } else if (error.request) {
-      // The request was made but no response was received (e.g., invalid URL, network issue)
       return res.status(504).json({
         error: 'Failed to fetch the profile URL. The server did not respond or the URL is invalid.',
         sourceUrl: profileUrl,
@@ -99,7 +91,7 @@ app.post('/users/enrich', async (req, res) => {
  */
 app.get('/:name.html', (req, res) => {
   const { name } = req.params;
-  const { email } = req.query;
+  const { email, username } = req.query;
 
   // Convert the URL slug back to a displayable full name
   // e.g., "prince-dayma" -> "Prince Dayma"
@@ -119,6 +111,7 @@ app.get('/:name.html', (req, res) => {
 
     // Replace placeholders with dynamic data
     const finalHtml = template
+      .replace(/{{USERNAME}}/g, username || 'Not Provided')
       .replace(/{{FULL_NAME}}/g, fullName)
       .replace(/{{EMAIL}}/g, email || 'Not Provided');
 
