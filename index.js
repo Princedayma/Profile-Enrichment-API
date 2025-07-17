@@ -130,3 +130,6 @@ app.listen(PORT, HOST, () => {
   console.log(`✅ Server is running on http://${HOST}:${PORT}`);
   console.log(`➡️  Create a dynamic profile at: http://localhost:${PORT}/index.html`);
 });
+
+// Export the Express app for Vercel
+module.exports = app;
