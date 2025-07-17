@@ -90,6 +90,14 @@
     </div>
 
     <script>
+        // Automatically fill the Profile URL for easy testing after deployment
+        document.addEventListener('DOMContentLoaded', () => {
+            const profileUrlInput = document.getElementById('profileUrl');
+            // window.location.origin will be http://localhost:3000 in dev
+            // or your production URL (e.g., https://your-app.vercel.app) after deployment.
+            profileUrlInput.value = `${window.location.origin}/test-profile.html`;
+        });
+
         document.getElementById('enrichment-form').addEventListener('submit', async (event) => {
             event.preventDefault(); // Prevents the default form submission
 
@@ -108,7 +116,15 @@
                         profileUrl: form.profileUrl.value,
                     })
                 });
+
                 const data = await response.json();
+
+                // Handle non-successful HTTP responses from the API
+                if (!response.ok) {
+                    throw new Error(data.error || `Server responded with status ${response.status}`);
+                }
+
+                // Display the successful result
                 resultDiv.textContent = JSON.stringify(data, null, 2);
             } catch (error) {
                 resultDiv.textContent = `Error: ${error.message}`;

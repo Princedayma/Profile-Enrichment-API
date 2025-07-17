@@ -35,10 +35,10 @@ app.post('/users/enrich', async (req, res) => {
   try {
     // --- 2. Fetch HTML from the profileUrl using axios ---
     const response = await axios.get(profileUrl, {
+      timeout: 15000, // Set timeout to 15 seconds (adjust as needed),
       headers: {
-        // Some websites may block requests without a valid User-Agent
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-      },
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+      }, // Some websites may block requests without a valid User-Agent
     });
     const html = response.data;
 
