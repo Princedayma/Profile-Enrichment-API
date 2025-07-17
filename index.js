@@ -8,26 +8,20 @@ const fs = require('fs');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// --- Enable CORS for all routes ---
 app.use(cors());
 
-// Middleware to parse incoming JSON requests
 app.use(express.json());
 
-// --- Serve static files from the 'public' directory ---
-// In a Vercel serverless environment, files are placed relative to the project root.
-// Use process.cwd() instead of __dirname to correctly locate the 'public' folder.
 app.use(express.static(path.join(process.cwd(), 'public')));
 
 /**
- * @route   POST /users/enrich
- * @desc    Enrich a user profile by scraping the fullName from a profileUrl.
+ * @route   
+ * @desc    
  * @access  Public
  */
 app.post('/users/enrich', async (req, res) => {
   const { username, email, profileUrl } = req.body;
 
-  // --- 1. Validate Input ---
   if (!username || !email || !profileUrl) {
     return res.status(400).json({ 
       error: 'Missing required fields. Please provide username, email, and profileUrl.' 
