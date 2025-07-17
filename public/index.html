@@ -86,21 +86,25 @@
             </div>
             <button type="submit">Enrich Profile</button>
         </form>
+        <div style="margin-top: 1rem; text-align: center;">
+            <a href="https://swagger.io/" target="_blank" style="display: inline-block; padding: 0.5rem 1rem; background-color: #28a745; color: white; border-radius: 4px; text-decoration: none; margin-right: 0.5rem;">
+                API Docs
+            </a>
+            <a href="https://github.com/Princedayma/Profile-Enrichment-API/blob/main/README.md" target="_blank" style="display: inline-block; padding: 0.5rem 1rem; background-color: #6c757d; color: white; border-radius: 4px; text-decoration: none;">
+                README
+            </a>
+        </div>
         <div id="result">The enriched profile data will appear here.</div>
     </div>
 
     <script>
-        // Automatically fill the Profile URL for easy testing after deployment
         document.addEventListener('DOMContentLoaded', () => {
             const profileUrlInput = document.getElementById('profileUrl');
-            // window.location.origin will be http://localhost:3000 in dev
-            // or your production URL (e.g., https://your-app.vercel.app) after deployment.
-            profileUrlInput.value = `${window.location.origin}/test-profile.html`;
+            profileUrlInput.value = `https://profile-enrichment-api.vercel.app/test-profile.html`;
         });
 
         document.getElementById('enrichment-form').addEventListener('submit', async (event) => {
-            event.preventDefault(); // Prevents the default form submission
-
+            event.preventDefault(); 
             const form = event.target;
             const resultDiv = document.getElementById('result');
             resultDiv.textContent = 'Enriching...';

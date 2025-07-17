@@ -15,7 +15,9 @@ app.use(cors());
 app.use(express.json());
 
 // --- Serve static files from the 'public' directory ---
-app.use(express.static(path.join(__dirname, 'public')));
+// In a Vercel serverless environment, files are placed relative to the project root.
+// Use process.cwd() instead of __dirname to correctly locate the 'public' folder.
+app.use(express.static(path.join(process.cwd(), 'public')));
 
 /**
  * @route   POST /users/enrich
@@ -106,7 +108,8 @@ app.get('/:name.html', (req, res) => {
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
     .join(' ');
 
-  const profileTemplatePath = path.join(__dirname, 'public', 'profile.html');
+  // Use process.cwd() to build the correct path in a serverless environment.
+  const profileTemplatePath = path.join(process.cwd(), 'public', 'profile.html');
 
   fs.readFile(profileTemplatePath, 'utf8', (err, template) => {
     if (err) {
